@@ -1,0 +1,31 @@
+#!/usr/bin/env perl
+
+# Copyright © 2019 Jakub Wilk <jwilk@jwilk.net>
+
+no lib '.';  # CVE-2016-1238
+
+use v5.10;
+use strict;
+use warnings;
+
+use English qw(-no_match_vars);
+
+my @authors;
+my $authors = <STDIN>;
+if ($authors =~ /;/) {
+    @authors =  split(/;/, $authors);
+} else {
+    while ($authors =~ /(\G[^,]+,[^,]+)(,\s+|\s+$)/g) {
+        push @authors, $1;
+    }
+}
+@authors = map { s/\A\s+|\s+\z//g; $_ } @authors;
+my $i = 1;
+for my $author (@authors) {
+    my ($last, $first) = split(/,\s+/, $author, 2);
+    print "|last$i=$last|first$i=$first";
+    $i++;
+}
+print "\n";
+
+# vim:ts=4 sts=4 sw=4 et
