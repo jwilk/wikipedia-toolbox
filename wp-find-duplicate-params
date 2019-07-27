@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+
+# Copyright © 2019 Jakub Wilk <jwilk@jwilk.net>
+
+no lib '.';  # CVE-2016-1238
+
+## no critic (MatchVars)
+
+use v5.10;
+use strict;
+use warnings;
+
+use English;
+
+sub analyze
+{
+    local $_ = $MATCH;
+    if (s/([|]\s*)([\w-]+)(\s*=.*[|]\s*)(\2)(?=\s*=)/$1\e[1m$2\e[0m$3\e[1m$4\e[0m/s) {
+        print "$_\n";
+    }
+    return '';
+}
+
+local $RS = undef;
+$_ = <STDIN>;
+while (s/[{][{](?:[^{}]|[}][^}]|[{][^{])+[}][}]/analyze/ge) {
+    next;
+}
+
+# vim:ts=4 sts=4 sw=4 et
