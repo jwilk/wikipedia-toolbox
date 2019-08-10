@@ -13,18 +13,35 @@ use warnings;
 
 use English;
 
+my $go_on = 0;
+my $section = '';
+my $prev_section = '';
+
 sub analyze
 {
     local $_ = $MATCH;
-    if (s/([|]\s*)([\w-]+)(\s*=.*[|]\s*)(\2)(?=\s*=)/$1\e[1m$2\e[0m$3\e[1m$4\e[0m/s) {
+    if (/^=/) {
+        $section = $_;
+        return $_;
+    } elsif (s/([|]\s*)([\w-]+)(\s*=.*[|]\s*)(\2)(?=\s*=)/$1\e[1m$2\e[0m$3\e[1m$4\e[0m/s) {
+        if ($section ne $prev_section) {
+            $prev_section = $section;
+            if ($section eq '') {
+                $section = '==';
+            }
+            print "$section\n";
+        }
         print "$_\n";
     }
+    $go_on = 1;
     return '';
 }
 
 local $RS = undef;
 $_ = <STDIN>;
-while (s/[{][{](?:[^{}]|[}][^}]|[{][^{])+[}][}]/analyze/ge) {
+while (s/^(=++)[^\n=]++\1$|[{][{](?:[^{}]|[}][^}]|[{][^{])+[}][}]/analyze/mge and $go_on) {
+    $section = '';
+    $go_on = 0;
     next;
 }
 
