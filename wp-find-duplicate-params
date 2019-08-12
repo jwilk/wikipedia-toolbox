@@ -39,7 +39,7 @@ sub analyze
 
 local $RS = undef;
 $_ = <STDIN>;
-while (s/^(=++)[^\n=]++\1$|[{][{](?:[^{}]|[}][^}]|[{][^{])+[}][}]/analyze/mge and $go_on) {
+while (s/^(=++)[^\n]+\1$|[{][{](?:[^{}]|[}][^}]|[{][^{])+[}][}]/analyze/mge and $go_on) {
     $section = '';
     $go_on = 0;
     next;
