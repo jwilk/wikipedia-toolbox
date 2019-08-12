@@ -24,7 +24,7 @@ sub analyze
     if (/^=/) {
         $section = $_;
         return $_;
-    } elsif (s/([|]\s*)([\w-]+)(\s*=.*[|]\s*)(\2)(?=\s*=)/$1\e[1m$2\e[0m$3\e[1m$4\e[0m/s) {
+    } elsif (s/([|]\s*)([\w-]+)(\s*=.*[|]\s*)(\2)(?=\s*=)/$1\e[91m$2\e[0m$3\e[91m$4\e[0m/s) {
         if ($section ne $prev_section) {
             $prev_section = $section;
             if ($section eq '') {
