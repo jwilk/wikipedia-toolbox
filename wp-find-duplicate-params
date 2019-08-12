@@ -13,6 +13,7 @@ use warnings;
 
 use English;
 
+my $first = 1;
 my $go_on = 0;
 my $section = '';
 my $prev_section = '';
@@ -29,9 +30,13 @@ sub analyze
             if ($section eq '') {
                 $section = '==';
             }
-            print "$section\n";
+            my $csection = $section;
+            $first or print "\n";
+            print "\e[97m$csection\e[0m\n\n";
+            $first = 0;
         }
         print "$_\n";
+        $first = 0;
     }
     $go_on = 1;
     return '';
