@@ -42,8 +42,17 @@ sub analyze
     return '';
 }
 
-local $RS = undef;
-$_ = <STDIN>;
+if (scalar @ARGV == 0) {
+    local $RS = undef;
+    $_ = <STDIN>;
+} elsif (scalar @ARGV == 1 and $ARGV[0] eq '-x') {
+    $_ = qx(xclip -o -selection clipboard) or die;
+} else {
+    my $prog = $PROGRAM_NAME;
+    $prog =~ s{^.*/}{};
+    print {*STDERR} "Usage: $prog [-x]\n";
+    exit 1;
+}
 while (s/^(=++)[^\n]+\1$|[{][{](?:[^{}]|[}][^}]|[{][^{])+[}][}]/analyze/mge and $go_on) {
     $section = '';
     $go_on = 0;
