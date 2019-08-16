@@ -13,6 +13,8 @@ use English qw(-no_match_vars);
 
 my @authors;
 my $authors;
+my $trailer = '';
+my $xc = 0;
 if (scalar @ARGV == 0) {
     local $RS = undef;
     $authors = <STDIN>;
@@ -27,9 +29,12 @@ if (scalar @ARGV == 0) {
 if ($authors =~ /;/) {
     @authors =  split(/;/, $authors);
 } else {
+    my $lastpos = 0;
     while ($authors =~ /(\G[^,]+,[^,]+)(,\s+|\s+$)/g) {
         push @authors, $1;
+        $lastpos = $+[0];
     }
+    $trailer = substr $authors, $lastpos;
 }
 @authors = map { s/\A\s+|\s+\z//g; $_ } @authors;
 my $i = 1;
@@ -38,6 +43,11 @@ for my $author (@authors) {
     print "|last$i=$last|first$i=$first";
     $i++;
 }
+if (length $trailer > 0) {
+    print "|trailer=$trailer";
+    $xc = 1;
+}
 print "\n";
+exit $xc;
 
 # vim:ts=4 sts=4 sw=4 et
