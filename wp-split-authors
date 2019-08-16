@@ -14,6 +14,7 @@ use English qw(-no_match_vars);
 my @authors;
 my $authors;
 if (scalar @ARGV == 0) {
+    local $RS = undef;
     $authors = <STDIN>;
 } elsif (scalar @ARGV == 1 and $ARGV[0] eq '-x') {
     $authors = qx(xclip -o -selection clipboard) or die;
