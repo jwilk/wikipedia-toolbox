@@ -12,7 +12,17 @@ use warnings;
 use English qw(-no_match_vars);
 
 my @authors;
-my $authors = <STDIN>;
+my $authors;
+if (scalar @ARGV == 0) {
+    $authors = <STDIN>;
+} elsif (scalar @ARGV == 1 and $ARGV[0] eq '-x') {
+    $authors = qx(xclip -o -selection clipboard) or die;
+} else {
+    my $prog = $PROGRAM_NAME;
+    $prog =~ s{^.*/}{};
+    print {*STDERR} "Usage: $prog [-x]\n";
+    exit 1;
+}
 if ($authors =~ /;/) {
     @authors =  split(/;/, $authors);
 } else {
