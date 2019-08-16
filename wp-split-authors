@@ -30,7 +30,7 @@ if ($authors =~ /;/) {
     @authors =  split(/;/, $authors);
 } else {
     my $lastpos = 0;
-    while ($authors =~ /(\G[^,]+,[^,]+)(,\s+|\s+$)/g) {
+    while ($authors =~ /(\G[^,]+,[^,]+)(,\s+|\s*$)/g) {
         push @authors, $1;
         $lastpos = $+[0];
     }
