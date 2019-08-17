@@ -39,7 +39,7 @@ sub analyze
         $first = 0;
     }
     $go_on = 1;
-    return '';
+    return "\e[90m{...}\e[0m";
 }
 
 if (scalar @ARGV == 0) {
