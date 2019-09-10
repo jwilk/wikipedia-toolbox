@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Copyright © 2019 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+set -e -u
+
+prog="${0##*/}"
+if [ $# -ne 1 ]
+then
+    printf 'Usage: %s DOI\n' "$prog" >&2
+    exit 1
+fi
+doi="$1"
+doi=${doi#https://doi.org/}
+doi=$(perl -pnE 's/%([0-9A-Fa-f]{2})/chr hex $1/ge' <<EOF
+$doi
+EOF
+)
+ident=${doi#10.3168/jds.}
+printf 'url=https://www.journalofdairyscience.org/article/%s/abstract|joural=[[Journal of Dairy Science]]|doi=%s|doi-access=free\n' "$ident" "$doi"
+
+# vim:ts=4 sts=4 sw=4 et
