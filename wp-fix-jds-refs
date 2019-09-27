@@ -1,0 +1,44 @@
+#!/usr/bin/env perl
+
+# Copyright © 2019 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+no lib '.';  # CVE-2016-1238
+
+## no critic (MatchVars)
+
+use v5.10;
+use strict;
+use warnings;
+
+use English;
+
+use URI::Escape qw(uri_escape);
+
+sub update_param
+{
+    (local $_, my $key, my $value) = @_;
+    s/[|\s]\Q$key\E\s*=\s*\K[^\s|\x7D]+/$value/
+        or s/}}\z/|$key=$value$MATCH/
+        or die;
+    return $_;
+}
+
+sub fix_ref
+{
+    local $_ = $MATCH;
+    if (m{[|\s]doi\s*=\s*10[.]3168/jds[.]([^\s|\x7D]+)}) {
+        my $ident = $1;
+        my $url = sprintf('https://www.journalofdairyscience.org/article/%s/abstract', uri_escape($ident));
+        $_ = update_param($_, url => $url);
+        $_ = update_param($_, 'doi-access' => 'free');
+    }
+    return $_;
+}
+
+local $RS = undef;
+$_ = <STDIN>;
+s/[{][{](?:[^{}]|[}][^}]|[{][^{])+[}][}]/fix_ref/ge;
+print;
+
+# vim:ts=4 sts=4 sw=4 et
