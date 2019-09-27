@@ -53,7 +53,7 @@ if (scalar @ARGV == 0) {
     print {*STDERR} "Usage: $prog [-x]\n";
     exit 1;
 }
-while (s/^(=++)[^\n]+\1$|[{][{](?:[^{}]|[}][^}]|[{][^{])+[}][}]/analyze/mge and $go_on) {
+while (s/^(=++)[^\n]+\1\s*$|[{][{](?:[^{}]|[}][^}]|[{][^{])+[}][}]/analyze/mge and $go_on) {
     $section = '';
     $go_on = 0;
     next;
