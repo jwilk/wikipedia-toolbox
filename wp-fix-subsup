@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+
+# Copyright © 2020 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+no lib '.';  # CVE-2016-1238
+
+use v5.10;
+use strict;
+use warnings;
+use utf8;
+use open ':std' => ':locale';
+
+use English qw(-no_match_vars);
+use Unicode::Normalize qw(NFKC);
+
+my $sup = '⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹';
+my $sub = '₊₋₀₁₂₃₄₅₆₇₈₉';
+do {
+    local $RS = undef;
+    $_ = <STDIN>;
+};
+s(([$sup]+))('{{sup|' . NFKC($1) . '}}')ge;
+s(([$sub]+))('{{sub|' . NFKC($1) . '}}')ge;
+print;
+
+# vim:ts=4 sts=4 sw=4 et
