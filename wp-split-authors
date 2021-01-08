@@ -40,7 +40,7 @@ if ($authors =~ /;/) {
 my $i = 1;
 for my $author (@authors) {
     my ($last, $first) = split(/,\s+/, $author, 2);
-    print "|last$i=$last|first$i=$first";
+    print "|author$i-last=$last|author$i-first=$first";
     $i++;
 }
 if (length $trailer > 0) {
